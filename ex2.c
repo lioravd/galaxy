@@ -101,6 +101,9 @@ int main(int argc, char** argv) {
     MPI_Bcast(seeds, size, MPI_INT, 0, MPI_COMM_WORLD); // broadcast the array of random seeds to all processes
     srand(seeds[rank]); // seed the random number
 
+    // Scatter the main array into subarrays among processes
+    MPI_Scatter(all_stars, proc_size * sizeof(Star), MPI_BYTE, proc_stars,proc_size * sizeof(Star), MPI_BYTE, 0, MPI_COMM_WORLD);
+
     init_stars(proc_stars, proc_size);
 
     MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
@@ -113,7 +116,7 @@ int main(int argc, char** argv) {
 
     }
     printf("got here\n");
-    MPI_Barrier(MPI_COMM_WORLD);
+
     while ( (MPI_Wtime()- start_time) < simulation_time){
         printf("time passed %lf\n",MPI_Wtime()- start_time );
         counter += 1;
