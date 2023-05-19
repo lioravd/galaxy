@@ -78,6 +78,7 @@ void update_image(Star* all_stars, char image_num){
 
 int main(int argc, char** argv) {
 
+    Star* all_stars = (Star*)malloc(N*sizeof(Star));
 
 
     //MPI initialization
@@ -93,9 +94,6 @@ int main(int argc, char** argv) {
     int seeds[size];  //Array of seeds
 
     if (rank == 0) {
-        Star* all_stars = (Star*)malloc(N*sizeof(Star));
-        // Scatter the main array into subarrays among processes
-        MPI_Scatter(all_stars, proc_size * sizeof(Star), MPI_BYTE, proc_stars,proc_size * sizeof(Star), MPI_BYTE, 0, MPI_COMM_WORLD);
         srand(time(NULL)); // seed the random number generator only on Rank 0
         for (int i = 0; i < size; i++) {
             seeds[i] = rand(); // generate a random seed for each process
@@ -106,6 +104,7 @@ int main(int argc, char** argv) {
     srand(seeds[rank]); // seed the random number
 
 
+    MPI_Bcast(all_stars, size, MPI_BYTE, 0, MPI_COMM_WORLD); // broadcast the array of all stars to all processes
 
     init_stars(proc_stars, proc_size);
 
