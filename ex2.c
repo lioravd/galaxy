@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
         counter += 1;
         update_stars(proc_stars, all_stars,proc_size);
         printf("got here 2\n");
-        MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
+        MPI_Allgatherv(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
         printf("got here 3\n");
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
             {update_image(all_stars,'1');} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
