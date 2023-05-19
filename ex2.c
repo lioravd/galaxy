@@ -91,6 +91,7 @@ int main(int argc, char** argv) {
     Star* proc_stars = (Star*)malloc(proc_size*sizeof(Star));
 
     int seeds[size];  //Array of seeds
+    Star* all_stars = NULL;
     if (rank == 0) {
         Star* all_stars = (Star*)malloc(N*sizeof(Star));
         srand(time(NULL)); // seed the random number generator only on Rank 0
