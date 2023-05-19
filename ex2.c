@@ -21,16 +21,16 @@ typedef struct {
 } Star;
 
 double star_rand(){
-    double pos
+    double pos;
     int e_0= rand() %1000;
     int e_1= rand() %1000;
     int e_2= rand() %1000;
     int e_3= rand() %1000;
-    pos = e_0 + e_1 * 1000 + e_2 * 1000000 + e_3 * 1000000000
+    pos = e_0 + e_1 * 1000 + e_2 * 1000000 + e_3 * 1000000000;
     return pos;
 }
 
-void init_stars(star* proc_stars,int proc_size){
+void init_stars(Star* proc_stars,int proc_size){
     for(int i=0;i<proc_size;i++){
         proc_stars[i].pos_x =   star_rand();
         proc_stars[i].pos_y =   star_rand();
@@ -41,7 +41,7 @@ void init_stars(star* proc_stars,int proc_size){
     }
 
 }
-void calc_vel(star* this_star, star* other_star){
+void calc_vel(Star* this_star, Star* other_star){
     double x_dist = this_star.pos_x - other_star.pos_x, y_dist = this_star.pos_y - other_star.pos_y;
     double r_pow = pow((x_dist), 2) + pow((y_dist), 2);
     double angle = arctan(y_dist/x_dist);
@@ -52,7 +52,7 @@ void calc_vel(star* this_star, star* other_star){
     this_star.vel_y = this_star.vel_y + acce*sin(angle) * time_step;
 }
 
-void update_stars(star* proc_stars, star* all_stars, int proc_size, int rank){
+void update_stars(Star* proc_stars, Star* all_stars, int proc_size, int rank){
     for (int i=0; i<proc_size; i++){
         for (int j=0; j<N; j++){
             calc_vel(proc_stars[i], all_stars[j]);
@@ -62,7 +62,7 @@ void update_stars(star* proc_stars, star* all_stars, int proc_size, int rank){
     }
 }
 
-void update_image(star* all_stars, int image_num){
+void update_image(Star* all_stars, int image_num){
     File* file;
     char image_name[] = "image_#.csv";
     image_name [6] = image_num;
@@ -74,7 +74,7 @@ void update_image(star* all_stars, int image_num){
 
 int main(int argc, char** argv) {
 
-    star* all_stars = malloc(N*sizeof(star));
+    Star* all_stars = malloc(N*sizeof(star));
 
     //MPI initialization
     MPI_Init(&argc, &argv);
@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
 
     int proc_size = N/size; //every process own its stars
 
-    star* proc_stars = malloc(proc_size*sizeof(star));
+    Star* proc_stars = malloc(proc_size*sizeof(star));
 
     int seeds[size];  //Array of seeds
     if (rank == 0) {
