@@ -72,6 +72,7 @@ void update_image(Star* all_stars, char image_num){
     file = fopen(image_name, "w+");
     for (int i = 0; i<N; i++)
         fprintf(file,"%lf,%lf\n",all_stars[i].pos_x, all_stars[i].pos_y);
+    printf("file %c finish",image_num);
     fclose(file);
 }
 
@@ -111,7 +112,7 @@ int main(int argc, char** argv) {
         MPI_Bcast(&start_time, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     }
-
+    printf("got here");
     while ((MPI_Wtime() - start_time) < simulation_time){
         counter += 1;
         update_stars(proc_stars, all_stars,proc_size);
