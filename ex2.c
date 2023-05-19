@@ -5,12 +5,12 @@
 
 #define N 992 // Number of stars
 #define G 6.674e-11 // Gravitational constant
-#define MASS 2e30 // Mass of sun
+#define m 2e30 // Mass of sun
 #define ly 9e12
 #define DOMAIN_SIZE 100.0 // Domain size in light years
 #define TIME_STEP 0.01 // Time step size
-#define PI = 3.14
-#define simulation_time = 120
+#define PI 3.14
+#define simulation_time 120
 double start_time;
 int counter = 0;
 typedef struct {
@@ -32,8 +32,8 @@ double star_rand(){
 
 void init_stars(Star* proc_stars,int proc_size){
     for(int i=0;i<proc_size;i++){
-        proc_stars[i].pos_x =   star_rand();
-        proc_stars[i].pos_y =   star_rand();
+        proc_stars[i].pos_x =  star_rand();
+        proc_stars[i].pos_y =  star_rand();
         int vel = rand() % 200 + 100;
         double angle = (rand() % 1000) * 1000 * 2 * PI;
         proc_stars[i].vel_x =   vel * cos(angle);
