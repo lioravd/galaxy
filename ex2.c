@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
     if(rank == 0) //the "main" process take the current time and document the beginning of the "galaxy"
     {
         start_time = MPI_Wtime();
-        update_image(Stars_old,0);
+        update_image(all_stars,0);
         MPI_Bcast(&start_time, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     }
@@ -113,22 +113,23 @@ int main(int argc, char** argv) {
         counter += 1
         update_stars(proc_stars, proc_size);
         MPI_Allgather(Stars_new,stars_per_process*sizeof(Star),MPI_BYTE,Stars_old,stars_per_process*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
-        if(myrank==0 && j == NUMBER_ITERATIONS/2 ){save_situation(Stars_old,1);} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
+        if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
+            {update_image(all_stars,1);} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
     }
 
-    if(myrank == 0)  //the "main" process calculate the runnig time and document the end of the "galaxy"
+    if(rank == 0)  //the "main" process calculate the running time and document the end of the "galaxy"
     {
         end_time =MPI_Wtime();
         run_time =end_time-start_time;
-        printf("excexute time is: %lf\n",run_time);
-        save_situation(Stars_old,2);
+        printf("execute time is: %lf\n",run_time);
+        update_image(all_stars,2);
     }
 
-    /free all the program demends & dynamic allocations/
-                                            free(Stars_old);
-    free(Stars_new);
+    //free all the program demends & dynamic allocations
+    free(all_stars);
+    free(proc_stars);
     MPI_Finalize();
-        return 0;
+    return0;
 
 
 
