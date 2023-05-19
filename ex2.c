@@ -128,7 +128,7 @@ int main(int argc, char** argv) {
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE, recvBuffer, proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
 
         // Copy the received data to the main array
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < N; i++) {
             all_stars[i] = recvBuffer[i];
         }
         printf("got here 3\n");
