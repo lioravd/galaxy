@@ -13,7 +13,9 @@
 #define PI 3.14
 #define simulation_time 120
 double start_time;
-int counter = 0;
+int counter = 0 ,size, rank;
+
+
 typedef struct {
     double pos_x;
     double pos_y;
@@ -58,13 +60,13 @@ void update_stars(Star* proc_stars, Star* all_stars, int proc_size, int rank){
         for (int j=0; j<N; j++){
             calc_vel(proc_stars[i], all_stars[j]);
         }
-        proc_stars[i].pos_x = (proc_stars[i].pos_x + proc_stars[i].vel_x * time_step) % (100* ly);
-        proc_stars[i].pos_y = (proc_stars[i].pos_y + proc_stars[i].vel_y * time_step) % (100* ly);
+        proc_stars[i].pos_x = fmod((proc_stars[i].pos_x + proc_stars[i].vel_x * time_step), (100* ly));
+        proc_stars[i].pos_y = fmod((proc_stars[i].pos_y + proc_stars[i].vel_y * time_step), (100* ly));
     }
 }
 
 void update_image(Star* all_stars, int image_num){
-    File* file;
+    FILE* file;
     char image_name[] = "image_#.csv";
     image_name [6] = image_num;
     file = fopen(image_name, "w+");
