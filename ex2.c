@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -8,7 +9,7 @@
 #define m 2e30 // Mass of sun
 #define ly 9e12
 #define DOMAIN_SIZE 100.0 // Domain size in light years
-#define TIME_STEP 0.01 // Time step size
+#define time_step 0.01 // Time step size
 #define PI 3.14
 #define simulation_time 120
 double start_time;
@@ -110,7 +111,7 @@ int main(int argc, char** argv) {
     }
 
     while ((MPI_Wtime() - start_time) < simulation_time){
-        counter += 1
+        counter += 1;
         update_stars(proc_stars, proc_size);
         MPI_Allgather(Stars_new,stars_per_process*sizeof(Star),MPI_BYTE,Stars_old,stars_per_process*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
