@@ -91,7 +91,13 @@ int main(int argc, char** argv) {
     int proc_size = N/size; //every process own its stars
 
     Star* proc_stars = (Star*)malloc(proc_size*sizeof(Star));
-    Star* all_stars = (Star*)malloc(proc_size*size*sizeof(Star));
+    Star* all_stars = (Star*)malloc(N*sizeof(Star));
+    for (int i = 0; i < N; i++) {
+        all_stars[i].pos_x = i + 1.0;
+        all_stars[i].pos_x  = i + 2.0;
+        all_stars[i].vel_x = i + 3.0;
+        all_stars[i].vel_y = i + 3.0;
+    }
     int seeds[size];  //Array of seeds
 
     if (rank == 0) {
