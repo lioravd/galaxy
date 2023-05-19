@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    //MPI_Get_processor_name(processor_name,&namelen);
+    MPI_Get_processor_name(processor_name,&namelen);
 
     int proc_size = N/size; //every process own its stars
     Star* proc_stars = (Star*)malloc(proc_size*sizeof(Star));
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
 
     MPI_Bcast(seeds, size, MPI_INT, 0, MPI_COMM_WORLD); // broadcast the array of random seeds to all processes
     srand(seeds[rank]); // seed the random number
-    Star* recvBuffer = (Star*)malloc(N * sizeof(Star));
+
 
     init_stars(proc_stars, proc_size);
 
@@ -125,12 +125,9 @@ int main(int argc, char** argv) {
         update_stars(proc_stars, all_stars,proc_size);
         printf("%d got here 2\n",rank);
         // Gather updated sub-arrays into the receive buffer
-        MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE, recvBuffer, proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
+        MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE, all_stars, proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
 
-        // Copy the received data to the main array
-        for (int i = 0; i < N; i++) {
-            all_stars[i] = recvBuffer[i];
-        }
+
         printf("got here 3\n");
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
             {update_image(all_stars,'1');} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
