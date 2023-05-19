@@ -12,7 +12,7 @@
 #define time_step 0.01 // Time step size
 #define PI 3.14
 #define simulation_time 120
-double start_time;
+double start_time, end_time, run_time;
 int counter = 0 ,size, rank;
 
 
@@ -55,7 +55,7 @@ void calc_vel(Star this_star, Star other_star){
     this_star.vel_y = this_star.vel_y + acce*sin(angle) * time_step;
 }
 
-void update_stars(Star* proc_stars, Star* all_stars, int proc_size, int rank){
+void update_stars(Star* proc_stars, Star* all_stars, int proc_size){
     for (int i=0; i<proc_size; i++){
         for (int j=0; j<N; j++){
             calc_vel(proc_stars[i], all_stars[j]);
@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
     while ((MPI_Wtime() - start_time) < simulation_time){
         counter += 1;
         update_stars(proc_stars, proc_size);
-        MPI_Allgather(Stars_new,stars_per_process*sizeof(Star),MPI_BYTE,Stars_old,stars_per_process*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
+        MPI_Allgather(proc_stars,stars_per_process*sizeof(Star),MPI_BYTE,Stars_old,stars_per_process*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
             {update_image(all_stars,1);} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
     }
@@ -132,7 +132,7 @@ int main(int argc, char** argv) {
     free(all_stars);
     free(proc_stars);
     MPI_Finalize();
-    return0;
+    return 0;
 
 
 
