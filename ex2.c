@@ -113,7 +113,8 @@ int main(int argc, char** argv) {
 
     }
     printf("got here");
-    while ((MPI_Wtime() - start_time) < simulation_time){
+    while ( (MPI_Wtime()- start_time) < simulation_time){
+        printf("time passed %lf\n",MPI_Wtime()- start_time );
         counter += 1;
         update_stars(proc_stars, all_stars,proc_size);
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
