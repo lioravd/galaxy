@@ -104,8 +104,6 @@ int main(int argc, char** argv) {
     srand(seeds[rank]); // seed the random number
 
 
-    MPI_Bcast(all_stars, size, MPI_BYTE, 0, MPI_COMM_WORLD); // broadcast the array of all stars to all processes
-
     init_stars(proc_stars, proc_size);
 
     MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
@@ -117,13 +115,13 @@ int main(int argc, char** argv) {
         MPI_Bcast(&start_time, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     }
-    printf("got here\n");
+    printf("%d got here\n",rank);
 
     while ( (MPI_Wtime()- start_time) < simulation_time){
         printf("time passed %lf\n",MPI_Wtime()- start_time );
         counter += 1;
         update_stars(proc_stars, all_stars,proc_size);
-        printf("got here 2\n");
+        printf("%d got here 2\n",rank);
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
         printf("got here 3\n");
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
