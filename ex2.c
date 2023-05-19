@@ -73,7 +73,7 @@ void update_image(Star* all_stars, char image_num){
     file = fopen(image_name, "w+");
     for (int i = 0; i<N; i++)
         fprintf(file,"%lf,%lf\n",all_stars[i].pos_x, all_stars[i].pos_y);
-    printf("file %c finish",image_num);
+    printf("file %c finish\n",image_num);
     fclose(file);
 }
 
