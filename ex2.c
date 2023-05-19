@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
 
     MPI_Bcast(seeds, size, MPI_INT, 0, MPI_COMM_WORLD); // broadcast the array of random seeds to all processes
     srand(seeds[rank]); // seed the random number
-    recvBuffer = (Star*)malloc(n * sizeof(Star));
+    recvBuffer = (Star*)malloc(N * sizeof(Star));
 
     init_stars(proc_stars, proc_size);
 
