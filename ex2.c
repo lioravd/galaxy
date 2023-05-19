@@ -78,9 +78,7 @@ void update_image(Star* all_stars, char image_num){
 }
 
 int main(int argc, char** argv) {
-    int proc_size = N/size; //every process own its stars
-    Star* proc_stars = (Star*)malloc(proc_size*sizeof(Star));
-    Star* all_stars = (Star*)malloc(N*sizeof(Star));
+
 
 
     //MPI initialization
@@ -89,6 +87,9 @@ int main(int argc, char** argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     //MPI_Get_processor_name(processor_name,&namelen);
 
+    int proc_size = N/size; //every process own its stars
+    Star* proc_stars = (Star*)malloc(proc_size*sizeof(Star));
+    Star* all_stars = (Star*)malloc(N*sizeof(Star));
 
 
 
