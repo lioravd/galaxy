@@ -9,10 +9,9 @@
 #define G 6.674e-11 // Gravitational constant
 #define m 2e30 // Mass of sun
 #define ly 9e12
-#define DOMAIN_SIZE 100.0 // Domain size in light years
 #define time_step 0.01 // Time step size
 #define PI 3.14
-#define simulation_time 120
+#define simulation_time 5
 double start_time, end_time, run_time;
 int counter = 0 ,size, rank;
 
@@ -66,10 +65,10 @@ void update_stars(Star* proc_stars, Star* all_stars, int proc_size){
     }
 }
 
-void update_image(Star* all_stars, int image_num){
+void update_image(Star* all_stars, char image_num){
     FILE* file;
     char image_name[] = "image_#.csv";
-    image_name [6] = image_num;
+    image_name[6] = image_num;
     file = fopen(image_name, "w+");
     for (int i = 0; i<N; i++)
         fprintf(file,"%lf,%lf\n",all_stars[i].pos_x, all_stars[i].pos_y);
@@ -108,7 +107,7 @@ int main(int argc, char** argv) {
     if(rank == 0) //the "main" process take the current time and document the beginning of the "galaxy"
     {
         start_time = MPI_Wtime();
-        update_image(all_stars,0);
+        update_image(all_stars,'0');
         MPI_Bcast(&start_time, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     }
@@ -118,7 +117,7 @@ int main(int argc, char** argv) {
         update_stars(proc_stars, all_stars,proc_size);
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
-            {update_image(all_stars,1);} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
+            {update_image(all_stars,'1');} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
     }
 
     if(rank == 0)  //the "main" process calculate the running time and document the end of the "galaxy"
@@ -126,7 +125,7 @@ int main(int argc, char** argv) {
         end_time =MPI_Wtime();
         run_time =end_time-start_time;
         printf("execute time is: %lf\n",run_time);
-        update_image(all_stars,2);
+        update_image(all_stars,'2');
     }
 
     //free all the program demends & dynamic allocations
