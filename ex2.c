@@ -87,12 +87,15 @@ int main(int argc, char** argv) {
     //MPI_Get_processor_name(processor_name,&namelen);
 
     int proc_size = N/size; //every process own its stars
-    Star* all_stars = (Star*)malloc(N*sizeof(Star));
+
     Star* proc_stars = (Star*)malloc(proc_size*sizeof(Star));
 
     int seeds[size];  //Array of seeds
 
     if (rank == 0) {
+        Star* all_stars = (Star*)malloc(N*sizeof(Star));
+        // Scatter the main array into subarrays among processes
+        MPI_Scatter(all_stars, proc_size * sizeof(Star), MPI_BYTE, proc_stars,proc_size * sizeof(Star), MPI_BYTE, 0, MPI_COMM_WORLD);
         srand(time(NULL)); // seed the random number generator only on Rank 0
         for (int i = 0; i < size; i++) {
             seeds[i] = rand(); // generate a random seed for each process
@@ -102,8 +105,7 @@ int main(int argc, char** argv) {
     MPI_Bcast(seeds, size, MPI_INT, 0, MPI_COMM_WORLD); // broadcast the array of random seeds to all processes
     srand(seeds[rank]); // seed the random number
 
-    // Scatter the main array into subarrays among processes
-    MPI_Scatter(all_stars, proc_size * sizeof(Star), MPI_BYTE, proc_stars,proc_size * sizeof(Star), MPI_BYTE, 0, MPI_COMM_WORLD);
+
 
     init_stars(proc_stars, proc_size);
 
