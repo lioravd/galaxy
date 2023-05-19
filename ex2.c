@@ -13,7 +13,7 @@
 #define PI 3.14
 #define simulation_time 5
 double start_time, end_time, run_time;
-int counter = 0 ,size, rank, namelen;
+int counter = 0 ,size, rank;
 
 
 typedef struct {
@@ -79,7 +79,7 @@ void update_image(Star* all_stars, char image_num){
 
 int main(int argc, char** argv) {
 
-
+    int namelen;
 
     //MPI initialization
     MPI_Init(&argc, &argv);
