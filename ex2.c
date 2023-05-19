@@ -80,6 +80,7 @@ void update_image(Star* all_stars, char image_num){
 int main(int argc, char** argv) {
 
     int namelen;
+    char processor_name[MPI_MAX_PROCESSOR_NAME];
 
     //MPI initialization
     MPI_Init(&argc, &argv);
