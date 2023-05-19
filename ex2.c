@@ -79,7 +79,8 @@ void update_image(Star* all_stars, char image_num){
 
 int main(int argc, char** argv) {
 
-
+    Star* proc_stars = (Star*)malloc(proc_size*sizeof(Star));
+    Star* all_stars = (Star*)malloc(N*sizeof(Star));
 
 
     //MPI initialization
@@ -90,8 +91,7 @@ int main(int argc, char** argv) {
 
     int proc_size = N/size; //every process own its stars
 
-    Star* proc_stars = (Star*)malloc(proc_size*sizeof(Star));
-    Star* all_stars = (Star*)malloc(N*sizeof(Star));
+
     for (int i = 0; i < N; i++) {
         all_stars[i].pos_x = i + 1.0;
         all_stars[i].pos_x  = i + 2.0;
@@ -125,10 +125,10 @@ int main(int argc, char** argv) {
     printf("%d got here\n",rank);
 
     while ( (MPI_Wtime()- start_time) < simulation_time){
-        sleep(1);
+        usleep(100000)
         printf("time passed %lf\n",MPI_Wtime()- start_time );
         counter += 1;
-        update_stars(proc_stars, all_stars,proc_size);
+        //update_stars(proc_stars, all_stars,proc_size);
         printf("%d got here 2\n",rank);
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
         printf("got here 3\n");
