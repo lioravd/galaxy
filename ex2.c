@@ -13,7 +13,7 @@
 #define PI 3.14
 #define simulation_time 5
 double start_time, end_time, run_time;
-int counter = 0 ,size, rank;
+int counter = 0 ,size, rank, namelen;
 
 
 typedef struct {
