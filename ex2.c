@@ -87,13 +87,12 @@ int main(int argc, char** argv) {
     //MPI_Get_processor_name(processor_name,&namelen);
 
     int proc_size = N/size; //every process own its stars
-
+    Star* all_stars = (Star*)malloc(N*sizeof(Star));
     Star* proc_stars = (Star*)malloc(proc_size*sizeof(Star));
 
     int seeds[size];  //Array of seeds
-    Star* all_stars = NULL;
+
     if (rank == 0) {
-        Star* all_stars = (Star*)malloc(N*sizeof(Star));
         srand(time(NULL)); // seed the random number generator only on Rank 0
         for (int i = 0; i < size; i++) {
             seeds[i] = rand(); // generate a random seed for each process
