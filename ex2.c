@@ -74,7 +74,7 @@ void update_image(Star* all_stars, int image_num){
 
 int main(int argc, char** argv) {
 
-    Star* all_stars = malloc(N*sizeof(star));
+    Star* all_stars = malloc(N*sizeof(Star));
 
     //MPI initialization
     MPI_Init(&argc, &argv);
@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
 
     int proc_size = N/size; //every process own its stars
 
-    Star* proc_stars = malloc(proc_size*sizeof(star));
+    Star* proc_stars = malloc(proc_size*sizeof(Star));
 
     int seeds[size];  //Array of seeds
     if (rank == 0) {
