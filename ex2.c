@@ -114,8 +114,8 @@ int main(int argc, char** argv) {
 
     while ((MPI_Wtime() - start_time) < simulation_time){
         counter += 1;
-        update_stars(proc_stars, proc_size);
-        MPI_Allgather(proc_stars,stars_per_process*sizeof(Star),MPI_BYTE,Stars_old,stars_per_process*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
+        update_stars(proc_stars, proc_size,proc_size);
+        MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
             {update_image(all_stars,1);} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
     }
