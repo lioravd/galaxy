@@ -41,7 +41,7 @@ void init_stars(Star* proc_stars,int proc_size){
     }
 
 }
-void calc_vel(Star* this_star, Star* other_star){
+void calc_vel(Star this_star, Star other_star){
     double x_dist = this_star.pos_x - other_star.pos_x, y_dist = this_star.pos_y - other_star.pos_y;
     double r_pow = pow((x_dist), 2) + pow((y_dist), 2);
     double angle = arctan(y_dist/x_dist);
