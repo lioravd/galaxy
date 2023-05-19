@@ -78,7 +78,7 @@ void update_image(Star* all_stars, char image_num){
 
 int main(int argc, char** argv) {
 
-    Star* all_stars = (Star*)malloc(N*sizeof(Star));
+
 
     //MPI initialization
     MPI_Init(&argc, &argv);
@@ -92,6 +92,7 @@ int main(int argc, char** argv) {
 
     int seeds[size];  //Array of seeds
     if (rank == 0) {
+        Star* all_stars = (Star*)malloc(N*sizeof(Star));
         srand(time(NULL)); // seed the random number generator only on Rank 0
         for (int i = 0; i < size; i++) {
             seeds[i] = rand(); // generate a random seed for each process
