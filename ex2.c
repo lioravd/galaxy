@@ -47,7 +47,7 @@ void init_stars(Star* proc_stars,int proc_size){
 void calc_vel(Star this_star, Star other_star){
     double x_dist = this_star.pos_x - other_star.pos_x, y_dist = this_star.pos_y - other_star.pos_y;
     double r_pow = pow((x_dist), 2) + pow((y_dist), 2);
-    double angle = arctan(y_dist/x_dist);
+    double angle = atan(y_dist/x_dist);
     if ((r_pow == 0) || (angle == 0)) return;
     double acce = G  * m / r_pow;
 
@@ -114,7 +114,7 @@ int main(int argc, char** argv) {
 
     while ((MPI_Wtime() - start_time) < simulation_time){
         counter += 1;
-        update_stars(proc_stars, proc_size,proc_size);
+        update_stars(proc_stars, all_stars,proc_size);
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
             {update_image(all_stars,1);} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
