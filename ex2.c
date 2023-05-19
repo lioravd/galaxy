@@ -125,7 +125,7 @@ int main(int argc, char** argv) {
     printf("%d got here\n",rank);
 
     while ( (MPI_Wtime()- start_time) < simulation_time){
-        usleep(100000)
+        usleep(100000);
         printf("time passed %lf\n",MPI_Wtime()- start_time );
         counter += 1;
         //update_stars(proc_stars, all_stars,proc_size);
