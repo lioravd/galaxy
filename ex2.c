@@ -112,12 +112,14 @@ int main(int argc, char** argv) {
         MPI_Bcast(&start_time, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     }
-    printf("got here");
+    printf("got here\n");
     while ( (MPI_Wtime()- start_time) < simulation_time){
         printf("time passed %lf\n",MPI_Wtime()- start_time );
         counter += 1;
         update_stars(proc_stars, all_stars,proc_size);
+        printf("got here 2\n");
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);//sycronization between all the process about all star locations & directions.
+        printf("got here 3\n");
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
             {update_image(all_stars,'1');} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
     }
