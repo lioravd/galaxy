@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
 
     init_stars(proc_stars, proc_size);
 
-    MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
+    //MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
 
     if(rank == 0) //the "main" process take the current time and document the beginning of the "galaxy"
     {
