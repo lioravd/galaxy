@@ -11,7 +11,7 @@
 #define ly 9e12
 #define time_step 0.01 // Time step size
 #define PI 3.14
-#define simulation_time 5
+#define simulation_time 120
 double start_time, end_time, run_time;
 int counter = 0 ,size, rank;
 
@@ -120,24 +120,14 @@ int main(int argc, char** argv) {
 
     printf("%d got here\n",rank);
 
-    while (MPI_Wtime()- start_time < simulation_time){
-        usleep(100000);
-        printf("time passed %lf\n",MPI_Wtime()- start_time );
+    while (counter<12000){
         counter += 1;
         update_stars(proc_stars, all_stars,proc_size);
-        printf("%d got here 2\n",rank);
-        // Gather updated sub-arrays into the receive buffer
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE, all_stars, proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
-
-
-        printf("got here 3\n");
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
-            {update_image(all_stars,'1');} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
-        //if (MPI_Wtime()- start_time < simulation_time)
-        //printf("rank: %d, runinng time: %lf\n",rank,MPI_Wtime()- start_time);
-
-
+            {update_image(all_stars,'1');}
     }
+
 
     if(rank == 0)  //the "main" process calculate the running time and document the end of the "galaxy"
     {
