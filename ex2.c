@@ -63,7 +63,6 @@ void update_stars(Star* proc_stars, Star* all_stars, int proc_size){
         proc_stars[i].pos_x = fmod((proc_stars[i].pos_x + proc_stars[i].vel_x * time_step), (100* ly));
         proc_stars[i].pos_y = fmod((proc_stars[i].pos_y + proc_stars[i].vel_y * time_step), (100* ly));
     }
-    printf("updated\n");
 }
 
 void update_image(Star* all_stars, char image_num){
