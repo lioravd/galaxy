@@ -133,7 +133,10 @@ int main(int argc, char** argv) {
         printf("got here 3\n");
         if(rank==0 && (MPI_Wtime()-start_time)>simulation_time/2 && (MPI_Wtime()-start_time)<simulation_time/2+1)
             {update_image(all_stars,'1');} //////---------------------------------->                                                   the "main" process document the mid-time of the "galaxy"
-        if (MPI_Wtime()- start_time < simulation_time) break;
+        //if (MPI_Wtime()- start_time < simulation_time)
+        printf("rank: %d, start time: %lf",rank,start_time);
+
+
     }
 
     if(rank == 0)  //the "main" process calculate the running time and document the end of the "galaxy"
