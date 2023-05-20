@@ -23,17 +23,17 @@ typedef struct {
     double vel_y;
 } Star;
 
-double star_rand(){
+double star_rand(){ //randomize init stars location
     double pos;
-    double e_0= (rand() %1000);// / 1000);
-    double e_1= (rand() %1000);// / 1000);
-    double e_2= (rand() %1000);// / 1000);
-    double e_3= (rand() %1000);// / 1000);
+    double e_0= (rand() %1000);
+    double e_1= (rand() %1000);
+    double e_2= (rand() %1000);;
+    double e_3= (rand() %1000);
     pos = e_0 + e_1 * 1000 + e_2 * 1000000 + e_3 * 1000000000;
     return pos;
 }
 
-void init_stars(Star* proc_stars,int proc_size){
+void init_stars(Star* proc_stars,int proc_size){    //initialization function for stars
     for(int i=0;i<proc_size;i++){
         proc_stars[i].pos_x =  star_rand();
         proc_stars[i].pos_y =  star_rand();
@@ -44,28 +44,28 @@ void init_stars(Star* proc_stars,int proc_size){
     }
 
 }
-void calc_vel(Star this_star, Star other_star){
+void calc_vel(Star this_star, Star other_star){   //velocity calculation function by gravity force
     double x_dist = this_star.pos_x - other_star.pos_x, y_dist = this_star.pos_y - other_star.pos_y;
-    double r_pow = pow((x_dist), 2) + pow((y_dist), 2);
+    double r_pow = pow((x_dist), 2) + pow((y_dist), 2); //calculate distance
     double angle = atan(y_dist/x_dist);
     if ((r_pow == 0) || (angle == 0)) return;
-    double acce = G  * m / r_pow;
+    double acce = G  * m / r_pow;  //calculate acceleration
 
-    this_star.vel_x = this_star.vel_x + acce*cos(angle) * time_step;
-    this_star.vel_y = this_star.vel_y + acce*sin(angle) * time_step;
+    this_star.vel_x = this_star.vel_x + acce*cos(angle) * time_step;   //update x velocity
+    this_star.vel_y = this_star.vel_y + acce*sin(angle) * time_step;    //update y velocity
 }
 
-void update_stars(Star* proc_stars, Star* all_stars, int proc_size){
+void update_stars(Star* proc_stars, Star* all_stars, int proc_size){   //update stars location function
     for (int i=0; i<proc_size; i++){
         for (int j=0; j<N; j++){
             calc_vel(proc_stars[i], all_stars[j]);
         }
-        proc_stars[i].pos_x = fmod((proc_stars[i].pos_x + proc_stars[i].vel_x * time_step), (100* ly));
-        proc_stars[i].pos_y = fmod((proc_stars[i].pos_y + proc_stars[i].vel_y * time_step), (100* ly));
+        proc_stars[i].pos_x = fmod((proc_stars[i].pos_x + proc_stars[i].vel_x * time_step), (100* ly)); //update x position
+        proc_stars[i].pos_y = fmod((proc_stars[i].pos_y + proc_stars[i].vel_y * time_step), (100* ly)); //update y position
     }
 }
 
-void update_image(Star* all_stars, char image_num){
+void update_image(Star* all_stars, char image_num){   //save coordinates to Excel file
     FILE* file;
     char image_name[] = "image_#.csv";
     image_name[6] = image_num;
@@ -104,21 +104,21 @@ int main(int argc, char** argv) {
     srand(seeds[rank]); // seed the random number
 
 
-    init_stars(proc_stars, proc_size);
-
+    init_stars(proc_stars, proc_size);  //initialize stars
+    // gather the coordinates from each process
     MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE,all_stars,proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
 
     if(rank == 0) //the "main" process take the current time and document the beginning of the "galaxy"
     {
         start_time = MPI_Wtime();
-        update_image(all_stars,'0');
+        update_image(all_stars,'0'); //save first coordinates
 
     }
-    MPI_Bcast(&start_time, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&start_time, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);  //broadcast start time
 
 
 
-    while (counter<1200){
+    while (counter<1200){   //update the star's location each iteration
         counter += 1;
         update_stars(proc_stars, all_stars,proc_size);
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE, all_stars, proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
@@ -127,7 +127,7 @@ int main(int argc, char** argv) {
     }
 
 
-    if(rank == 0)  //the "main" process calculate the running time and document the end of the "galaxy"
+    if(rank == 0)  //save the end coordinates
     {
         end_time =MPI_Wtime();
         run_time =end_time-start_time;
@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
         update_image(all_stars,'2');
     }
 
-    //free all the program demends & dynamic allocations
+    //free all dynamic allocations and finalize
     free(all_stars);
     free(proc_stars);
     MPI_Finalize();
