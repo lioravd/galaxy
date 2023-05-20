@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
 
 
 
-    while (counter<120){
+    while (counter<1200){
         counter += 1;
         update_stars(proc_stars, all_stars,proc_size);
         MPI_Allgather(proc_stars,proc_size*sizeof(Star),MPI_BYTE, all_stars, proc_size*sizeof(Star),MPI_BYTE,MPI_COMM_WORLD);
