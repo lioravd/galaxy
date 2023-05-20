@@ -25,10 +25,10 @@ typedef struct {
 
 double star_rand(){
     double pos;
-    int e_0= rand() %1000;
-    int e_1= rand() %1000;
-    int e_2= rand() %1000;
-    int e_3= rand() %1000;
+    double e_0= (rand() %1000);// / 1000);
+    double e_1= (rand() %1000);// / 1000);
+    double e_2= (rand() %1000);// / 1000);
+    double e_3= (rand() %1000);// / 1000);
     pos = e_0 + e_1 * 1000 + e_2 * 1000000 + e_3 * 1000000000;
     return pos;
 }
