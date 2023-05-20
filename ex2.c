@@ -114,9 +114,10 @@ int main(int argc, char** argv) {
     {
         start_time = MPI_Wtime();
         update_image(all_stars,'0');
-        MPI_Bcast(&start_time, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     }
+    MPI_Bcast(&start_time, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
     printf("%d got here\n",rank);
 
     while ( (MPI_Wtime()- start_time) < simulation_time){
