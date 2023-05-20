@@ -9,7 +9,7 @@
 #define G 6.674e-11 // Gravitational constant
 #define m 2e30 // Mass of sun
 #define ly 9e12
-#define time_step 0.5 // Time step size
+#define time_step 5 // Time step size
 #define PI 3.14
 #define simulation_time 120
 double start_time, end_time, run_time;
